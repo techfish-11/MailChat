@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mailchat/mail/send_email.dart'; // Import the SendEmail class
 
 class ChatScreen extends StatelessWidget {
   final String contactName;
   final String contactEmail;
+  final TextEditingController _messageController = TextEditingController();
 
-  const ChatScreen({super.key, required this.contactName, required this.contactEmail});
+  ChatScreen({super.key, required this.contactName, required this.contactEmail});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class ChatScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: _messageController,
                     decoration: InputDecoration(
                       labelText: 'Type a message',
                       border: OutlineInputBorder(),
@@ -48,8 +51,25 @@ class ChatScreen extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: () {
-                    // Implement send message logic
+                  onPressed: () async {
+                    if (_messageController.text.isNotEmpty) {
+                      final sendEmail = SendEmail();
+                      try {
+                        await sendEmail.sendEmail(
+                          contactEmail,
+                          'New message from $contactName',
+                          _messageController.text,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Email sent successfully')),
+                        );
+                        _messageController.clear();
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to send email: $e')),
+                        );
+                      }
+                    }
                   },
                 ),
               ],
