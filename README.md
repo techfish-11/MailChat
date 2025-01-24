@@ -1,3 +1,5 @@
+<img src="https://github.com/user-attachments/assets/07759a1d-586d-4118-a00e-38834d9e83c7" alt="logo" width="500"/>
+
 # MailChat
 
 EmailをメッセージングアプリのようなUIでできます。
